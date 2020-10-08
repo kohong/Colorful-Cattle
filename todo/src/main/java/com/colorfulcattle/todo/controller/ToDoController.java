@@ -21,20 +21,20 @@ public class ToDoController {
     private final ToDoService toDoService;
 
     @GetMapping("/all")
-    ResponseEntity<List<ToDo>> allToDo() {
+    public ResponseEntity<List<ToDo>> allToDo() {
         log.info("Returning all ToDos");
         List<ToDo> toDos = toDoService.allToDo();
         return !toDos.isEmpty() ? ResponseEntity.ok(toDos) : ResponseEntity.noContent().build();
     }
 
     @PostMapping("/add")
-    ResponseEntity addToDo(@RequestBody ToDo toDo) {
+    public ResponseEntity<Boolean> addToDo(@RequestBody ToDo toDo) {
         log.info("Adding new ToDo");
         return toDoService.saveToDo(toDo) ? ResponseEntity.ok().build() : ResponseEntity.unprocessableEntity().build();
     }
 
     @GetMapping("/edit")
-    ResponseEntity<ToDo> getToDo(@RequestParam Long id) {
+    public ResponseEntity<ToDo> getToDo(@RequestParam Long id) {
         log.info("Getting ToDo");
         try {
             return ResponseEntity.ok(toDoService.findToDo(id));
@@ -44,7 +44,7 @@ public class ToDoController {
     }
 
     @PostMapping("/edit")
-    ResponseEntity editToDo(@RequestBody ToDo toDo) {
+    public ResponseEntity<Boolean> editToDo(@RequestBody ToDo toDo) {
         log.info("Editing ToDo with id: " + toDo.getId());
         try {
             return toDoService.editToDo(toDo) ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
@@ -54,7 +54,7 @@ public class ToDoController {
     }
 
     @GetMapping("/delete")
-    ResponseEntity deleteToDo(@RequestParam String id) {
+    public ResponseEntity<Boolean> deleteToDo(@RequestParam String id) {
         log.info("Deleting ToDo");
         if (id.contentEquals("all")) {
             toDoService.removeAllToDo();
